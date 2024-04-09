@@ -3,10 +3,9 @@
 
 (cl:in-package #:regalia)
 
-(defgeneric array-dimensions (array))
-
-(defmethod array-dimensions ((array array))
-  (%array-dimensions array))
+;; NOTE Provided in class.array.lisp
+;; (defmethod array-dimensions ((array array))
+;;   (array-dimensions array))
 
 (defmethod array-dimensions (array)
   (error 'type-error :datum array :expected-type 'array))
