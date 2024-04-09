@@ -2,27 +2,36 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
 
 ### TODO
 
-+ [ ] System Classes ARRAY, VECTOR, BIT-VECTOR, and other specialized array classes.
-+ [ ] AREF should be implemented in terms of ROW-MAJOR-AREF.
-+ [ ] ARRAY-DIMENSIONS
-+ [ ] ARRAY-DIMENSION
-+ [ ] ARRAY-ELEMENT-TYPE 
-+ [ ] ARRAY-IN-BOUNDS-P
-+ [ ] ARRAY-RANK
-+ [ ] ARRAY-TOTAL-SIZE
-+ [ ] FILL-POINTER
-+ [ ] VECTOR-PUSH
-+ [ ] VECTOR-PUSH-EXTEND using ADJUST-ARRAY (not sure though if Regalia can implement ADJUST-ARRAY)
-+ [ ] Condition types and condition reporters
-+ [ ] Documentation strings 
-+ [ ] Packages and ASDF systems for intrinsic/extrinsic use
-+ [ ] Possibly some compiler macros 
+1. Provide code for the following.
+
+   + [ ] System Class ARRAY 
+   + [ ] System Class VECTOR
+   + [ ] System Class BIT-VECTOR
+   + [ ] Other specialized array classes.
+   + [ ] ROW-MAJOR-AREF
+   + [ ] AREF (implemented in terms of ROW-MAJOR-AREF).
+   + [X] ARRAY-DIMENSIONS
+   + [X] ARRAY-DIMENSION
+   + [X] ARRAY-ELEMENT-TYPE 
+   + [ ] ARRAY-IN-BOUNDS-P
+   + [X] ARRAY-RANK
+   + [ ] ARRAY-TOTAL-SIZE
+   + [ ] FILL-POINTER
+   + [ ] VECTOR-PUSH
+   + [ ] VECTOR-PUSH-EXTEND using ADJUST-ARRAY (not sure though if Regalia can implement ADJUST-ARRAY)
+   + [ ] Condition types and condition reporters
+   + [ ] Documentation strings 
+   + [ ] Packages and ASDF systems for intrinsic/extrinsic use
+   + [ ] Possibly some compiler macros 
+
+2. Document all of them.
 
 ### Notes
 
 + Add docstrings and reference links to Lispworks's CLHS. 
 + Quote contents from dpANS or [NovaSpec](https://novaspec.org/cl/).
 + For tests, see what [Consecution](https://github.com/s-expressionists/Consecution/) did.
++ "Notes" in CLHS cannot always be trusted.
 
 ### Reference
 
