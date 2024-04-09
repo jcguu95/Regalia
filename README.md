@@ -18,7 +18,14 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
 + [ ] Packages and ASDF systems for intrinsic/extrinsic use
 + [ ] Possibly some compiler macros 
 
+### Notes
+
++ Add docstrings and reference links to Lispworks's CLHS. 
++ Quote contents from dpANS or [NovaSpec](https://novaspec.org/cl/).
++ For tests, see what [Consecution](https://github.com/s-expressionists/Consecution/) did.
+
 ### Reference
 
-+ [CLHS: Section The Arrays Dictionary](http://www.ai.mit.edu/projects/iiip/doc/CommonLISP/HyperSpec/Body/sec_the_arrays_dictionary.html)
++ [NovaSpec](https://novaspec.org/cl/)
++ [CLHS: Chapter 15. Arrays](https://www.lispworks.com/documentation/lw60/CLHS/Body/15_.htm)
 + [robert-strandh/Constrictor: A library that implements the functionality of the Conses dictionary of the Common Lisp standard](https://github.com/robert-strandh/Constrictor)
