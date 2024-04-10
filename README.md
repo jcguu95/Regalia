@@ -9,7 +9,9 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
    + [ ] System Class BIT-VECTOR
    + [ ] Other specialized array classes.
    + [X] ARRAY-ROW-MAJOR-INDEX
-   + [ ] AREF, in terms of ARRAY-ROW-MAJOR-INDEX and ROW-MAJOR-AREF (provided by the host).
+   + [ ] Implement MAKE-ARRAY-CONTENTS (extrinsic), and add note for the intrinsic version.
+   + [ ] ROW-MAJOR-AREF (extrinsic: in terms of the returned object from MAKE-ARRAY-CONTENTS)
+   + [ ] AREF (in terms of ROW-MAJOR-AREF).
    + [X] ARRAY-DIMENSIONS
    + [X] ARRAY-DIMENSION
    + [X] ARRAY-ELEMENT-TYPE 
@@ -32,6 +34,11 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
 + Quote contents from dpANS or [NovaSpec](https://novaspec.org/cl/).
 + For tests, see what [Consecution](https://github.com/s-expressionists/Consecution/) did.
 + "Notes" in CLHS cannot always be trusted.
++ In the extrinsic version, regalia must provide everything that the ARRAY
+  module needs. In the intrinsic version relies on some operators provide by
+  the host. For example, in the intrinsic version, the definition of
+  MAKE-ARRAY-CONTENTS is provided by the client. But in the extrinsic version,
+  regalia defines MAKE-ARRAY-CONTENTS using whatever the host provides.
 
 ### Reference
 
