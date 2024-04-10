@@ -8,8 +8,8 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
    + [ ] System Class VECTOR
    + [ ] System Class BIT-VECTOR
    + [ ] Other specialized array classes.
-   + [ ] ROW-MAJOR-AREF
-   + [ ] AREF (implemented in terms of ROW-MAJOR-AREF).
+   + [X] ARRAY-ROW-MAJOR-INDEX
+   + [ ] AREF, in terms of ARRAY-ROW-MAJOR-INDEX and ROW-MAJOR-AREF (provided by the host).
    + [X] ARRAY-DIMENSIONS
    + [X] ARRAY-DIMENSION
    + [X] ARRAY-ELEMENT-TYPE 
