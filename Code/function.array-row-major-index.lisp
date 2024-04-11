@@ -51,3 +51,7 @@
                            :displaced-to a
                            :displaced-index-offset 4)
                1 2 1)))
+
+;;;
+(defmethod array-row-major-index (array &rest subscripts)
+  (error 'type-error :datum array :expected-type 'array))
