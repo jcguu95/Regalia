@@ -1,6 +1,8 @@
 ;;;; Accessor ROW-MAJOR-AREF
 ;;;; https://www.lispworks.com/documentation/HyperSpec/Body/f_row_ma.htm
 
+(cl:in-package #:regalia)
+
 (defgeneric row-major-aref (array index))
 
 ;; Only for extrinsic version. For intrinsic use, the host has to provide its
