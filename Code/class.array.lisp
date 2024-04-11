@@ -8,7 +8,7 @@
 (defgeneric array-element-type (array))
 
 (defclass array ()
-  ((%contents :initarg :contents :accessor array-contents)
+  ((%contents :initarg :contents :accessor array-contents) ; Only for the extrinsic version. See #'make-array-contents.
    (%dimensions :initarg :dimensions :reader array-dimensions)
    ;; TODO Enforcement (?) and Documentation: The slot of %element-type has to
    ;; be a type-specifier https://www.lispworks.com/documentation/HyperSpec/Body/26_glo_t.htm#type_specifier
