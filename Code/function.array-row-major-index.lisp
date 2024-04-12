@@ -23,7 +23,8 @@
                 (push d0 dimensions-reverse))
           :finally
              ;; Check both lists have the same length.
-             (unless (and (null d) (null s)) ; TODO Write a better signals.
+             (unless (and (null d) (null s))
+               ;; TODO Write a better signals:
                (error "Lengths not equal.")))
     ;; Algorithm - Let the dimensions of ARRAY be (d_1 d_2 [..] d_n) and the
     ;; subscripts be (s_1 s_2 [..] s_n). Then the row major index is
