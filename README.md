@@ -5,7 +5,7 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
 1. Provide code for the following.
 
    + [ ] System Class ARRAY 
-   + [ ] System Class VECTOR
+   + [X] System Class VECTOR
    + [ ] System Class BIT-VECTOR
    + [ ] Other specialized array classes.
    + [X] ARRAY-ROW-MAJOR-INDEX
@@ -21,12 +21,13 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
    + [ ] FILL-POINTER
    + [ ] VECTOR-PUSH
    + [ ] VECTOR-PUSH-EXTEND using ADJUST-ARRAY (not sure though if Regalia can implement ADJUST-ARRAY)
+   
+2. Document, Polish and Clean Up
+
    + [ ] Condition types and condition reporters
    + [ ] Documentation strings 
    + [ ] Packages and ASDF systems for intrinsic/extrinsic use
    + [ ] Possibly some compiler macros 
-
-2. Document all of them.
 
 3. Test them using ANSI-suite mimicking [Consecution](https://github.com/s-expressionists/Consecution/).
 
