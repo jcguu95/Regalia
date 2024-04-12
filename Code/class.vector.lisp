@@ -1,6 +1,8 @@
 ;;;; System Class VECTOR
 ;;;; https://www.lispworks.com/documentation/HyperSpec/Body/t_vector.htm
 
+(cl:in-package #:regalia)
+
 (defgeneric fill-pointer (vector))
 
 (defclass vector (array sequence)
