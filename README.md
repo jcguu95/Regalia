@@ -17,7 +17,7 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
    + [X] ARRAY-ELEMENT-TYPE 
    + [ ] ARRAY-IN-BOUNDS-P
    + [X] ARRAY-RANK
-   + [ ] ARRAY-TOTAL-SIZE
+   + [X] ARRAY-TOTAL-SIZE
    + [ ] FILL-POINTER
    + [ ] VECTOR-PUSH
    + [ ] VECTOR-PUSH-EXTEND using ADJUST-ARRAY (not sure though if Regalia can implement ADJUST-ARRAY)
