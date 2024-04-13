@@ -7,7 +7,6 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
    + [ ] System Class ARRAY (NOTE: SPEC is long)
    + [X] System Class VECTOR
    + [X] System Class BIT-VECTOR
-   + [ ] Other specialized array classes.
    + [X] ARRAY-ROW-MAJOR-INDEX
    + [X] Implement MAKE-ARRAY-CONTENTS (extrinsic), and add note for the intrinsic version.
    + [X] ROW-MAJOR-AREF (extrinsic: in terms of the returned object from MAKE-ARRAY-CONTENTS)
