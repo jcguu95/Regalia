@@ -2,27 +2,46 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
 
 ### TODO
 
-1. Provide code for the following.
+1. Provide entries for the extrinsic versions.
 
-   + [ ] System Class ARRAY (NOTE: SPEC is long)
-   + [X] System Class VECTOR
-   + [X] System Class BIT-VECTOR
-   + [X] ARRAY-ROW-MAJOR-INDEX
    + [X] Implement MAKE-ARRAY-CONTENTS (extrinsic), and add note for the intrinsic version.
-   + [X] ROW-MAJOR-AREF (extrinsic: in terms of the returned object from MAKE-ARRAY-CONTENTS)
-   + [X] AREF (in terms of ROW-MAJOR-AREF).
-   + [X] ARRAY-DIMENSIONS
-   + [X] ARRAY-DIMENSION
-   + [X] ARRAY-ELEMENT-TYPE 
-   + [X] ARRAY-IN-BOUNDS-P
-   + [X] ARRAY-RANK
-   + [X] ARRAY-TOTAL-SIZE
-   + [X] FILL-POINTER
-   + [ ] ADJUST-ARRAY (NOTE: SPEC is long)
-   + [X] VECTOR-PUSH
-   + [ ] VECTOR-PUSH-EXTEND (use ADJUST-ARRAY)
-   + [ ] Provide all other entries in the array dictionary for the extrinsic version.
-   
+   + [ ] System Class ARRAY (NOTE: SPEC is long)
+   + [ ] Type SIMPLE-ARRAY
+   + [X] System Class VECTOR
+   + [ ] Type SIMPLE-VECTOR
+   + [X] System Class BIT-VECTOR
+   + [ ] Type SIMPLE-BIT-VECTOR
+   + [ ] Function MAKE-ARRAY
+   + [ ] Function ADJUST-ARRAY (NOTE: SPEC is long)
+   + [ ] Function ADJUSTABLE-ARRAY-P
+   + [X] Accessor AREF
+   + [X] Function ARRAY-DIMENSION
+   + [X] Function ARRAY-DIMENSIONS
+   + [X] Function ARRAY-ELEMENT-TYPE
+   + [ ] Function ARRAY-HAS-FILL-POINTER-P
+   + [ ] Function ARRAY-DISPLACEMENT
+   + [X] Function ARRAY-IN-BOUNDS-P
+   + [X] Function ARRAY-RANK
+   + [X] Function ARRAY-ROW-MAJOR-INDEX
+   + [X] Function ARRAY-TOTAL-SIZE
+   + [ ] Function ARRAYP
+   + [X] Accessor FILL-POINTER
+   + [X] Accessor ROW-MAJOR-AREF
+   + [ ] Function UPGRADED-ARRAY-ELEMENT-TYPE
+   + [ ] Constant Variable ARRAY-DIMENSION-LIMIT
+   + [ ] Constant Variable ARRAY-RANK-LIMIT
+   + [ ] Constant Variable ARRAY-TOTAL-SIZE-LIMIT
+   + [ ] Function SIMPLE-VECTOR-P
+   + [ ] Accessor SVREF
+   + [ ] Function VECTOR
+   + [ ] Function VECTOR-POP
+   + [.] Function VECTOR-PUSH, VECTOR-PUSH-EXTEND
+   + [ ] Function VECTORP
+   + [ ] Accessor BIT, SBIT
+   + [ ] Function BIT-AND, BIT-ANDC1, BIT-ANDC2, BIT-EQV, BIT-IOR, BIT-NAND, BIT-NOR, BIT-NOT, BIT-ORC1, BIT-ORC2, BIT-XOR
+   + [ ] Function BIT-VECTOR-P
+   + [ ] Function SIMPLE-BIT-VECTOR-P
+
 2. Document, Polish and Clean Up
 
    + [ ] Condition types and condition reporters
