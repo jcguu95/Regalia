@@ -24,7 +24,7 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
    + [X] Function ARRAY-RANK
    + [X] Function ARRAY-ROW-MAJOR-INDEX
    + [X] Function ARRAY-TOTAL-SIZE
-   + [ ] Function ARRAYP
+   + [X] Function ARRAYP
    + [X] Accessor FILL-POINTER
    + [X] Accessor ROW-MAJOR-AREF
    + [ ] Function UPGRADED-ARRAY-ELEMENT-TYPE
