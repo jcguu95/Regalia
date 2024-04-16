@@ -30,7 +30,7 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
    + [ ] Function UPGRADED-ARRAY-ELEMENT-TYPE
    + [X] Constant Variable ARRAY-DIMENSION-LIMIT
    + [X] Constant Variable ARRAY-RANK-LIMIT
-   + [ ] Constant Variable ARRAY-TOTAL-SIZE-LIMIT
+   + [X] Constant Variable ARRAY-TOTAL-SIZE-LIMIT
    + [ ] Function SIMPLE-VECTOR-P
    + [ ] Accessor SVREF
    + [ ] Function VECTOR
