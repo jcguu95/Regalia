@@ -18,3 +18,9 @@
     :initform t
     :initarg :element-type
     :accessor array-element-type)))
+
+;; NOTE - ARRAY as a type specifier:
+;;
+;; The client is expected to provide the type ARRAY, which is like a "special
+;; type operator" because ARRAY should act as an atomic type specifier
+;; (defined via defclass) and a compound type specifier.
