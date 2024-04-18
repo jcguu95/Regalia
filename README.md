@@ -38,7 +38,7 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
    + [ ] Function VECTOR-PUSH, VECTOR-PUSH-EXTEND
      + [X] Function VECTOR-PUSH
      + [ ] Function VECTOR-PUSH-EXTEND [WAITING FOR: ADJUST-ARRAY]
-   + [ ] Function VECTORP
+   + [X] Function VECTORP
    + [ ] Accessor BIT, SBIT
    + [ ] Function BIT-AND, BIT-ANDC1, BIT-ANDC2, BIT-EQV, BIT-IOR, BIT-NAND, BIT-NOR, BIT-NOT, BIT-ORC1, BIT-ORC2, BIT-XOR
    + [X] Function BIT-VECTOR-P
