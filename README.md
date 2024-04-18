@@ -8,9 +8,9 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
    + [ ] System Class ARRAY [NOTE: SPEC is long]
    + [X] Type SIMPLE-ARRAY
    + [X] System Class VECTOR
-   + [ ] Type SIMPLE-VECTOR
+   + [ ] Type SIMPLE-VECTOR [WAITING FOR: MAKE-ARRAY ("Expressibly Adjustable")]
    + [X] System Class BIT-VECTOR
-   + [ ] Type SIMPLE-BIT-VECTOR
+   + [ ] Type SIMPLE-BIT-VECTOR [WAITING FOR: MAKE-ARRAY ("Expressibly Adjustable")]
    + [ ] Function MAKE-ARRAY
    + [ ] Function ADJUST-ARRAY (NOTE: SPEC is long)
    + [X] Function ADJUSTABLE-ARRAY-P
@@ -18,7 +18,7 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
    + [X] Function ARRAY-DIMENSION
    + [X] Function ARRAY-DIMENSIONS
    + [X] Function ARRAY-ELEMENT-TYPE
-   + [ ] Function ARRAY-HAS-FILL-POINTER-P
+   + [X] Function ARRAY-HAS-FILL-POINTER-P
    + [X] Function ARRAY-DISPLACEMENT
    + [X] Function ARRAY-IN-BOUNDS-P
    + [X] Function ARRAY-RANK
