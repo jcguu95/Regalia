@@ -7,6 +7,8 @@
 (defgeneric array-dimensions (array))
 (defgeneric array-element-type (array))
 (defgeneric adjustable-array-p (array))
+(defgeneric array-displaced-to (array))
+(defgeneric array-displaced-index-offset (array))
 
 (defclass array ()
   ((%contents :initarg :contents :accessor array-contents) ; Only for the extrinsic version. See #'make-array-contents.
@@ -17,7 +19,15 @@
    (%element-type
     :initform t
     :initarg :element-type
-    :accessor array-element-type)))
+    :accessor array-element-type)
+   (%displaced-to
+    :initform nil
+    :initarg :displaced-to
+    :reader array-displaced-to)
+   (%displaced-index-offset
+    :initform 0
+    :initarg :displaced-index-offset
+    :reader array-displaced-index-offset)))
 
 ;; NOTE - ARRAY as a type specifier:
 ;;

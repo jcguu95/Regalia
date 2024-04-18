@@ -5,7 +5,7 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
 1. Provide entries for the extrinsic versions.
 
    + [X] Implement MAKE-ARRAY-CONTENTS (extrinsic), and add note for the intrinsic version.
-   + [ ] System Class ARRAY (NOTE: SPEC is long)
+   + [ ] System Class ARRAY [NOTE: SPEC is long]
    + [X] Type SIMPLE-ARRAY
    + [X] System Class VECTOR
    + [ ] Type SIMPLE-VECTOR
@@ -19,7 +19,7 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
    + [X] Function ARRAY-DIMENSIONS
    + [X] Function ARRAY-ELEMENT-TYPE
    + [ ] Function ARRAY-HAS-FILL-POINTER-P
-   + [ ] Function ARRAY-DISPLACEMENT
+   + [X] Function ARRAY-DISPLACEMENT
    + [X] Function ARRAY-IN-BOUNDS-P
    + [X] Function ARRAY-RANK
    + [X] Function ARRAY-ROW-MAJOR-INDEX
@@ -37,7 +37,7 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
    + [ ] Function VECTOR-POP
    + [ ] Function VECTOR-PUSH, VECTOR-PUSH-EXTEND
      + [X] Function VECTOR-PUSH
-     + [ ] Function VECTOR-PUSH-EXTEND
+     + [ ] Function VECTOR-PUSH-EXTEND [WAITING FOR: ADJUST-ARRAY]
    + [ ] Function VECTORP
    + [ ] Accessor BIT, SBIT
    + [ ] Function BIT-AND, BIT-ANDC1, BIT-ANDC2, BIT-EQV, BIT-IOR, BIT-NAND, BIT-NOR, BIT-NOT, BIT-ORC1, BIT-ORC2, BIT-XOR
