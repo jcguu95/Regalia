@@ -8,7 +8,7 @@
 (defmethod aref ((array array) &rest subscripts)
   (row-major-aref array (apply #'array-row-major-index array subscripts)))
 
-(defmethod aref (array array &rest subscripts)
+(defmethod aref (array &rest subscripts)
   (error 'type-error :datum array :expected-type 'array))
 
 (defun (setf aref) (new-element array &rest subscripts)
