@@ -1,6 +1,10 @@
 ;;;; Function MAKE-ARRAY
 ;;;; https://www.lispworks.com/documentation/HyperSpec/Body/f_mk_ar.htm
 
+;; NOTE MAKE-ARRAY is a function whose decision model of behavior on its key
+;; arguments is not simple. When cleaning up the repo, make sure to read the
+;; spec line by line, and add missing tests to ANSI-TEST if necessary.
+
 (cl:in-package #:regalia)
 
 ;; NOTE Some code taken and edited from
@@ -95,31 +99,127 @@
                   (make-instance class-name
                                  :dimensions canonicalized-dimensions
                                  :additional-space additional-space))))
-        (if initial-contents-p
-            (let ((index 0))
-              (labels ((init (dimensions contents)
-                         (cond ((null dimensions)
-                                (setf (row-major-aref new-array 0) contents))
-                               ((null (rest dimensions))
-                                (if (listp contents)
-                                    (loop for element in contents
-                                          repeat (first dimensions)
-                                          do (setf (row-major-aref new-array index) element)
-                                             (incf index))
-                                    (loop for element across contents
-                                          repeat (first dimensions)
-                                          do (setf (row-major-aref new-array index) element)
-                                             (incf index))))
-                               (t
-                                (if (listp contents)
-                                    (loop for element in contents
-                                          repeat (first dimensions)
-                                          do (init (rest dimensions) element))
-                                    (loop for element across contents
-                                          repeat (first dimensions)
-                                          do (init (rest dimensions) element)))))))
-                (init canonicalized-dimensions initial-contents)))
-            (let ((element (if initial-element-p initial-element default-element)))
-              (loop for index from 0 below element-count
-                    do (setf (row-major-aref new-array index) element))))
+
+        ;; NEXT TODO Write %compute-branch.
+
+        ;; TODO NOTE INITIAL-ELEMENT is not used.
+        ;;
+        ;; If initial-element is supplied, it is used to initialize each
+        ;; element of new-array.
+        ;;
+        ;; If initial-element is supplied, it must be of the type given by
+        ;; element-type.
+        ;;
+        ;; initial-element cannot be supplied if either the :initial-contents
+        ;; option is supplied or displaced-to is non-nil.
+        ;;
+        ;; If initial-element is not supplied, the consequences of later
+        ;; reading an uninitialized element of new-array are undefined unless
+        ;; either initial-contents is supplied or displaced-to is non-nil.
+
+        ;; TODO NOTE INITIAL-CONTENTS
+        ;;
+        ;; initial-contents is composed of a nested structure of sequences.
+        ;;
+        ;;   The numbers of levels in the structure must equal the rank of
+        ;;   array.
+        ;;
+        ;;   Each leaf of the nested structure must be of the type given by
+        ;;   element-type.
+        ;;
+        ;; If array is zero-dimensional,then initial-contents specifies the
+        ;; single element.
+        ;;
+        ;; Otherwise, initial-contents must be a sequence whose length is
+        ;; equal to the first dimension; each element must be a nested
+        ;; structure for an array whose dimensions are the remaining
+        ;; dimensions, and so on.
+        ;;
+        ;; Initial-contents cannot be supplied if either initial-element is
+        ;; supplied or displaced-to is non-nil.
+        ;;
+        ;; If initial-contents is not supplied, the consequences of later
+        ;; reading an uninitialized element of new-array are UNDEFINED unless
+        ;; either initial-element is supplied or displaced-to is non-nil.
+
+        ;; TODO NOTE ADJUSTABLE
+        ;;
+        ;; If adjustable is non-nil, the array is expressly adjustable (and so
+        ;; actually adjustable);
+        ;;
+        ;; otherwise, the array is not expressly adjustable (and it is
+        ;; implementation-dependent whether the array is actually adjustable).
+
+        ;; TODO NOTE FILL-POINTER
+        ;;
+        ;; If fill-pointer is non-nil, the array must be one-dimensional; that
+        ;; is, the array must be a vector.
+        ;;
+        ;; If fill-pointer is t, the length of the vector is used to
+        ;; initialize the fill pointer. If fill-pointer is an integer, it
+        ;; becomes the initial fill pointer for the vector.
+
+        ;; TODO NOTE DISPLACED-TO
+        ;;
+        ;; If displaced-to is non-nil, make-array will create a displaced
+        ;; array and displaced-to is the target of that displaced array.
+        ;;
+        ;;   In that case, the consequences are undefined if the actual array
+        ;;   element type of displaced-to is not type equivalent to the actual
+        ;;   array element type of the array being created.
+        ;;
+        ;; If displaced-to is nil, the array is not a displaced array.
+
+        ;; TODO NOTE DISPLACED-INDEX-OFFSET
+        ;;
+        ;; The displaced-index-offset is made to be the index offset of the
+        ;; array.
+        ;;
+        ;; When an array A is given as the :displaced-to argument to
+        ;; make-array when creating array B, then array B is said to be
+        ;; displaced to array A.
+        ;;
+        ;; The total number of elements in an array, called the total size of
+        ;; the array, is calculated as the product of all the dimensions.
+        ;;
+        ;; It is required that the total size of A be no smaller than the sum
+        ;; of the total size of B plus the offset n supplied by the
+        ;; displaced-index-offset.
+        ;;
+        ;; The effect of displacing is that array B does not have any elements
+        ;; of its own, but instead maps accesses to itself into accesses to
+        ;; array A.
+        ;;
+        ;; The mapping treats both arrays as if they were one-dimensional by
+        ;; taking the elements in row-major order, and then maps an access to
+        ;; element k of array B to an access to element k+n of array A.
+
+        ;; FIXME The logic that spec specifies for handling keyword arguments
+        ;; is not as simple. Write %compute-branch for making the decision.
+
+        (when initial-contents-p ; This condition should be replaced by the output of %compute-branch
+          (let ((index 0))
+            (labels ((init (dimensions contents)
+                       (cond ((null dimensions)
+                              (setf (row-major-aref new-array 0) contents))
+                             ((null (rest dimensions))
+                              (if (listp contents)
+                                  (loop for element in contents
+                                        repeat (first dimensions)
+                                        do (setf (row-major-aref new-array index) element)
+                                           (incf index))
+                                  (loop for element across contents
+                                        repeat (first dimensions)
+                                        do (setf (row-major-aref new-array index) element)
+                                           (incf index))))
+                             (t
+                              (if (listp contents)
+                                  (loop for element in contents
+                                        repeat (first dimensions)
+                                        do (init (rest dimensions) element))
+                                  (loop for element across contents
+                                        repeat (first dimensions)
+                                        do (init (rest dimensions) element)))))))
+              (init canonicalized-dimensions initial-contents))))
+
         new-array))))
