@@ -100,99 +100,132 @@
                                  :dimensions canonicalized-dimensions
                                  :additional-space additional-space))))
 
-        ;; NEXT TODO Write %compute-branch.
 
-        ;; TODO NOTE INITIAL-ELEMENT is not used.
-        ;;
-        ;; If initial-element is supplied, it is used to initialize each
-        ;; element of new-array.
-        ;;
-        ;; If initial-element is supplied, it must be of the type given by
-        ;; element-type.
-        ;;
-        ;; initial-element cannot be supplied if either the :initial-contents
-        ;; option is supplied or displaced-to is non-nil.
-        ;;
-        ;; If initial-element is not supplied, the consequences of later
-        ;; reading an uninitialized element of new-array are undefined unless
-        ;; either initial-contents is supplied or displaced-to is non-nil.
+        (if initial-element-p
+            (progn
+              ;; NOTE SPEC: If initial-element is supplied, it is used to
+              ;; initialize each element of new-array.
+              ;;
+              ;; TODO
 
-        ;; TODO NOTE INITIAL-CONTENTS
-        ;;
-        ;; initial-contents is composed of a nested structure of sequences.
-        ;;
-        ;;   The numbers of levels in the structure must equal the rank of
-        ;;   array.
-        ;;
-        ;;   Each leaf of the nested structure must be of the type given by
-        ;;   element-type.
-        ;;
-        ;; If array is zero-dimensional,then initial-contents specifies the
-        ;; single element.
-        ;;
-        ;; Otherwise, initial-contents must be a sequence whose length is
-        ;; equal to the first dimension; each element must be a nested
-        ;; structure for an array whose dimensions are the remaining
-        ;; dimensions, and so on.
-        ;;
-        ;; Initial-contents cannot be supplied if either initial-element is
-        ;; supplied or displaced-to is non-nil.
-        ;;
-        ;; If initial-contents is not supplied, the consequences of later
-        ;; reading an uninitialized element of new-array are UNDEFINED unless
-        ;; either initial-element is supplied or displaced-to is non-nil.
+              ;; NOTE SPEC: If initial-element is supplied, it must be of the
+              ;; type given by element-type.
+              (check-type initial-element element-type)
 
-        ;; TODO NOTE ADJUSTABLE
-        ;;
-        ;; If adjustable is non-nil, the array is expressly adjustable (and so
-        ;; actually adjustable);
-        ;;
-        ;; otherwise, the array is not expressly adjustable (and it is
-        ;; implementation-dependent whether the array is actually adjustable).
+              ;; NOTE SPEC: initial-element cannot be supplied if either the
+              ;; :initial-contents option is supplied or displaced-to is
+              ;; non-nil.
+              (when (or initial-contents-p displaced-to)
+                ;; TODO Write a better condition signal.
+                (error))
 
-        ;; TODO NOTE FILL-POINTER
-        ;;
-        ;; If fill-pointer is non-nil, the array must be one-dimensional; that
-        ;; is, the array must be a vector.
-        ;;
-        ;; If fill-pointer is t, the length of the vector is used to
-        ;; initialize the fill pointer. If fill-pointer is an integer, it
-        ;; becomes the initial fill pointer for the vector.
+              )
+            (progn
+              ;; NOTE SPEC: If initial-element is not supplied, the
+              ;; consequences of later reading an uninitialized element of
+              ;; new-array are undefined unless either initial-contents is
+              ;; supplied or displaced-to is non-nil.
+              ;;
+              ;; TODO
+              ))
 
-        ;; TODO NOTE DISPLACED-TO
-        ;;
-        ;; If displaced-to is non-nil, make-array will create a displaced
-        ;; array and displaced-to is the target of that displaced array.
-        ;;
-        ;;   In that case, the consequences are undefined if the actual array
-        ;;   element type of displaced-to is not type equivalent to the actual
-        ;;   array element type of the array being created.
-        ;;
-        ;; If displaced-to is nil, the array is not a displaced array.
+        (if initial-contents-p
+            (progn
+              ;; NOTE SPEC: The numbers of levels in the structure must equal
+              ;; the rank of array. TODO
 
-        ;; TODO NOTE DISPLACED-INDEX-OFFSET
+              ;; NOTE SPEC: Each leaf of the nested structure must be of the
+              ;; type given by element-type. TODO
+
+              ;; NOTE SPEC: If array is zero-dimensional, then
+              ;; initial-contents specifies the single element. TODO Question:
+              ;; What single element?
+
+              ;; NOTE SPEC: Otherwise, initial-contents must be a sequence
+              ;; whose length is equal to the first dimension; each element
+              ;; must be a nested structure for an array whose dimensions are
+              ;; the remaining dimensions, and so on.
+
+              ;; NOTE SPEC: Initial-contents cannot be supplied if either
+              ;; initial-element is supplied or displaced-to is non-nil.
+              (when (or initial-element-p displaced-to)
+                ;; TODO Write a better condition signal.
+                (error))
+
+              ;; NOTE SPEC: If initial-contents is not supplied, the
+              ;; consequences of later reading an uninitialized element of
+              ;; new-array are undefined unless either initial-element is
+              ;; supplied or displaced-to is non-nil.
+              )
+
+            (progn
+              ;; TODO
+              ))
+
+        (if adjustable
+            (progn
+              ;; NOTE SPEC: If adjustable is non-nil, the array is expressly
+              ;; adjustable (and so actually adjustable);
+              )
+            (progn
+              ;; NOTE SPEC: otherwise, the array is not expressly adjustable
+              ;; (and it is implementation-dependent whether the array is
+              ;; actually adjustable).
+              ))
+
+        (cond ((not (null fill-pointer))
+               ;; NOTE SPEC: If fill-pointer is non-nil, the array must be
+               ;; one-dimensional; that is, the array must be a vector. TODO
+               )
+              ((eq t fill-pointer)
+               ;; NOTE SPEC: If fill-pointer is t, the length of the vector is
+               ;; used to initialize the fill pointer. TODO
+               )
+              ((integerp fill-pointer)
+               ;; NOTE SPEC: If fill-pointer is an integer, it becomes the initial
+               ;; fill pointer for the vector.
+               ))
+
+        (if displaced-to
+            (progn
+              ;; NOTE SPEC: If displaced-to is non-nil, make-array will create a displaced
+              ;; array and displaced-to is the target of that displaced array.
+
+              ;; NOTE SPEC: [If displaced-to is non-nil], the consequences are
+              ;; undefined if the actual array element type of displaced-to is not
+              ;; type equivalent to the actual array element type of the array being
+              ;; created.
+              )
+            (progn
+              ;; NOTE SPEC: If displaced-to is nil, the array is not a displaced
+              ;; array.
+              ))
+
+        ;; TODO
+        ;; NOTE DISPLACED-INDEX-OFFSET
         ;;
         ;; The displaced-index-offset is made to be the index offset of the
-        ;; array.
+        ;; array. TODO
         ;;
         ;; When an array A is given as the :displaced-to argument to
         ;; make-array when creating array B, then array B is said to be
-        ;; displaced to array A.
+        ;; displaced to array A. TODO
         ;;
         ;; The total number of elements in an array, called the total size of
-        ;; the array, is calculated as the product of all the dimensions.
+        ;; the array, is calculated as the product of all the dimensions. TODO
         ;;
         ;; It is required that the total size of A be no smaller than the sum
         ;; of the total size of B plus the offset n supplied by the
-        ;; displaced-index-offset.
+        ;; displaced-index-offset. TODO
         ;;
         ;; The effect of displacing is that array B does not have any elements
         ;; of its own, but instead maps accesses to itself into accesses to
-        ;; array A.
+        ;; array A. TODO
         ;;
         ;; The mapping treats both arrays as if they were one-dimensional by
         ;; taking the elements in row-major order, and then maps an access to
-        ;; element k of array B to an access to element k+n of array A.
+        ;; element k of array B to an access to element k+n of array A. TODO
+
 
         ;; FIXME The logic that spec specifies for handling keyword arguments
         ;; is not as simple. Write %compute-branch for making the decision.
