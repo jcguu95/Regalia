@@ -75,6 +75,21 @@
                      (fill-pointer)
                      (displaced-to nil displaced-to-p)
                      (displaced-index-offset nil displaced-index-offset-p))
+
+  ;; NOTE
+  ;;
+  ;; SPEC: dimensions — a designator for a list of valid array dimensions.
+  ;;
+  ;; SPEC: valid array dimension n. a fixnum suitable for use as an array
+  ;; dimension. Such a fixnum must be greater than or equal to zero, and less
+  ;; than the value of array-dimension-limit. When multiple array dimensions
+  ;; are to be used together to specify a multi-dimensional array, there is
+  ;; also an implied constraint that the product of all of the dimensions be
+  ;; less than the value of array-total-size-limit.
+  ;;
+  ;; TODO Check the above.
+
+
   ;; TODO handle ADJUSTABLE, DISPLACED-TO, DISPLACED-INDEX-OFFSET
   (declare (ignore adjustable displaced-to displaced-index-offset))
   ;; FIXME Do some more checks on the dimensions.
@@ -88,7 +103,8 @@
     (multiple-value-bind (class-name additional-space default-element)
         (%compute-array-spec element-type rank element-count)
       (let ((new-array
-              ;; FIXME Rank may be zero.
+              ;; FIXME Rank may be zero, in each case the resulting array is
+              ;; 0-dimensional, and can hold one object.
               (if (= rank 1)
                   (make-instance class-name
                                  :dimensions canonicalized-dimensions
@@ -124,22 +140,27 @@
               ;; NOTE SPEC: If initial-element is not supplied, the
               ;; consequences of later reading an uninitialized element of
               ;; new-array are undefined unless either initial-contents is
-              ;; supplied or displaced-to is non-nil.
+              ;; supplied or displaced-to is non-nil. TODO Question. What does
+              ;; this mean?
               ;;
               ;; TODO
               ))
 
         (if initial-contents-p
             (progn
+              ;; NOTE SPEC: initial-contents is composed of a nested structure
+              ;; of sequences. TODO
+
               ;; NOTE SPEC: The numbers of levels in the structure must equal
               ;; the rank of array. TODO
 
               ;; NOTE SPEC: Each leaf of the nested structure must be of the
               ;; type given by element-type. TODO
 
+
+
               ;; NOTE SPEC: If array is zero-dimensional, then
-              ;; initial-contents specifies the single element. TODO Question:
-              ;; What single element?
+              ;; initial-contents specifies the single element.
 
               ;; NOTE SPEC: Otherwise, initial-contents must be a sequence
               ;; whose length is equal to the first dimension; each element
@@ -155,7 +176,8 @@
               ;; NOTE SPEC: If initial-contents is not supplied, the
               ;; consequences of later reading an uninitialized element of
               ;; new-array are undefined unless either initial-element is
-              ;; supplied or displaced-to is non-nil.
+              ;; supplied or displaced-to is non-nil. TODO Question. What does
+              ;; this mean?
               )
 
             (progn
@@ -233,9 +255,28 @@
         (when initial-contents-p ; This condition should be replaced by the output of %compute-branch
           (let ((index 0))
             (labels ((init (dimensions contents)
+                       "Populate NEW-ARRAY by mutation."
                        (cond ((null dimensions)
                               (setf (row-major-aref new-array 0) contents))
                              ((null (rest dimensions))
+                              (check-type contents sequence)
+                              ;; TODO Isn't there a loop keyword that works
+                              ;; for sequences in general? TODO ANSWER: Use
+                              ;; #'map with RESULT-TYPE NIL:
+                              ;; https://novaspec.org/cl/f_map
+                              ;;
+                              ;; TODO CHECK: A sequence is either a list of an
+                              ;; "ACROSSABLE"? FIXME Answer is no! SPEC: "The
+                              ;; types vector and the type list are disjoint
+                              ;; subtypes of type sequence, but are not
+                              ;; necessarily an exhaustive partition of
+                              ;; sequence." in
+                              ;; https://novaspec.org/cl/t_sequence. FIXME And
+                              ;; answer is also yes! SPEC: "A sequence is an
+                              ;; ordered collection of elements, implemented
+                              ;; as either a vector or a list."
+                              ;; https://novaspec.org/cl/17_1_Sequence_Concepts
+                              ;; NOTE This is a contradiction in the SPEC!
                               (if (listp contents)
                                   (loop for element in contents
                                         repeat (first dimensions)
@@ -246,6 +287,24 @@
                                         do (setf (row-major-aref new-array index) element)
                                            (incf index))))
                              (t
+                              (check-type contents sequence)
+                              ;; TODO Isn't there a loop keyword that works
+                              ;; for sequences in general? TODO ANSWER: Use
+                              ;; #'map with RESULT-TYPE NIL:
+                              ;; https://novaspec.org/cl/f_map
+                              ;;
+                              ;; TODO CHECK: A sequence is either a list of an
+                              ;; "ACROSSABLE"? FIXME Answer is no! SPEC: "The
+                              ;; types vector and the type list are disjoint
+                              ;; subtypes of type sequence, but are not
+                              ;; necessarily an exhaustive partition of
+                              ;; sequence." in
+                              ;; https://novaspec.org/cl/t_sequence. FIXME And
+                              ;; answer is also yes! SPEC: "A sequence is an
+                              ;; ordered collection of elements, implemented
+                              ;; as either a vector or a list."
+                              ;; https://novaspec.org/cl/17_1_Sequence_Concepts
+                              ;; NOTE This is a contradiction in the SPEC!
                               (if (listp contents)
                                   (loop for element in contents
                                         repeat (first dimensions)
