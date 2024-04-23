@@ -260,58 +260,21 @@
                               (setf (row-major-aref new-array 0) contents))
                              ((null (rest dimensions))
                               (check-type contents sequence)
-                              ;; TODO Isn't there a loop keyword that works
-                              ;; for sequences in general? TODO ANSWER: Use
-                              ;; #'map with RESULT-TYPE NIL:
-                              ;; https://novaspec.org/cl/f_map
-                              ;;
-                              ;; TODO CHECK: A sequence is either a list of an
-                              ;; "ACROSSABLE"? FIXME Answer is no! SPEC: "The
-                              ;; types vector and the type list are disjoint
-                              ;; subtypes of type sequence, but are not
-                              ;; necessarily an exhaustive partition of
-                              ;; sequence." in
-                              ;; https://novaspec.org/cl/t_sequence. FIXME And
-                              ;; answer is also yes! SPEC: "A sequence is an
-                              ;; ordered collection of elements, implemented
-                              ;; as either a vector or a list."
-                              ;; https://novaspec.org/cl/17_1_Sequence_Concepts
-                              ;; NOTE This is a contradiction in the SPEC!
-                              (if (listp contents)
-                                  (loop for element in contents
-                                        repeat (first dimensions)
-                                        do (setf (row-major-aref new-array index) element)
-                                           (incf index))
-                                  (loop for element across contents
-                                        repeat (first dimensions)
-                                        do (setf (row-major-aref new-array index) element)
-                                           (incf index))))
-                             (t
-                              (check-type contents sequence)
-                              ;; TODO Isn't there a loop keyword that works
-                              ;; for sequences in general? TODO ANSWER: Use
-                              ;; #'map with RESULT-TYPE NIL:
-                              ;; https://novaspec.org/cl/f_map
-                              ;;
-                              ;; TODO CHECK: A sequence is either a list of an
-                              ;; "ACROSSABLE"? FIXME Answer is no! SPEC: "The
-                              ;; types vector and the type list are disjoint
-                              ;; subtypes of type sequence, but are not
-                              ;; necessarily an exhaustive partition of
-                              ;; sequence." in
-                              ;; https://novaspec.org/cl/t_sequence. FIXME And
-                              ;; answer is also yes! SPEC: "A sequence is an
-                              ;; ordered collection of elements, implemented
-                              ;; as either a vector or a list."
-                              ;; https://novaspec.org/cl/17_1_Sequence_Concepts
-                              ;; NOTE This is a contradiction in the SPEC!
-                              (if (listp contents)
-                                  (loop for element in contents
-                                        repeat (first dimensions)
-                                        do (init (rest dimensions) element))
-                                  (loop for element across contents
-                                        repeat (first dimensions)
-                                        do (init (rest dimensions) element)))))))
-              (init canonicalized-dimensions initial-contents))))
+                              (assert (= (length contents) (first dimensions))) ; TODO Signals a better condition.
+                              (map nil
+                                   (lambda (element)
+                                     ;; TODO Should we optimize this lambda (e.g. inline)?
+                                     (setf (row-major-aref new-array index) element)
+                                     (incf index))
+                                   contents)
+                              (t
+                               (check-type contents sequence)
+                               (assert (= (length contents) (first dimensions))) ; TODO Signals a better condition.
+                               (map nil
+                                    (lambda (element)
+                                      ;; TODO Should we optimize this lambda (e.g. inline)?
+                                      (init (rest dimensions) element))
+                                    contents)))))
+                     (init canonicalized-dimensions initial-contents))))
 
         new-array))))
