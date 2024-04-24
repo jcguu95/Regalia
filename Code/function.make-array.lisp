@@ -74,7 +74,7 @@
                      (adjustable)
                      (fill-pointer)
                      (displaced-to nil displaced-to-p)
-                     (displaced-index-offset nil displaced-index-offset-p))
+                     (displaced-index-offset 0 displaced-index-offset-p))
 
   ;; NOTE
   ;;
@@ -92,6 +92,32 @@
 
   ;; TODO handle ADJUSTABLE, DISPLACED-TO, DISPLACED-INDEX-OFFSET
   (declare (ignore adjustable displaced-to displaced-index-offset))
+
+
+  ;;; Some preliminary checks.
+
+  ;; NOTE SPEC: initial-element cannot be supplied if either the
+  ;; :initial-contents option is supplied or displaced-to is non-nil.
+  (when (and initial-element-p (or initial-contents-p displaced-to))
+    ;; TODO Write a better condition signal.
+    (error))
+  ;; NOTE SPEC: Initial-contents cannot be supplied if either initial-element
+  ;; is supplied or displaced-to is non-nil.
+  (when (and initial-contents-p (or initial-element-p displaced-to))
+    ;; TODO Write a better condition signal.
+    (error))
+
+  ;; NOTE SPEC: displaced-index-oﬀset — a valid array row-major index for
+  ;; displaced-to. The default is 0. This option must not be supplied unless a
+  ;; non-nil displaced-to is supplied.
+  (when (and displaced-index-offset-p
+             (not (and displaced-to-p
+                       displaced-to)))
+    ;; TODO Write a better condition signal.
+    (error))
+
+  ;;;
+
   ;; FIXME Do some more checks on the dimensions.
   (let* ((canonicalized-dimensions (if (listp dimensions)
                                        dimensions
@@ -128,12 +154,12 @@
               ;; type given by element-type.
               (check-type initial-element element-type)
 
-              ;; NOTE SPEC: initial-element cannot be supplied if either the
-              ;; :initial-contents option is supplied or displaced-to is
-              ;; non-nil.
-              (when (or initial-contents-p displaced-to)
-                ;; TODO Write a better condition signal.
-                (error))
+              ;; ;; NOTE SPEC: initial-element cannot be supplied if either the
+              ;; ;; :initial-contents option is supplied or displaced-to is
+              ;; ;; non-nil.
+              ;; (when (or initial-contents-p displaced-to)
+              ;;   ;; TODO Write a better condition signal.
+              ;;   (error))
 
               )
             (progn
@@ -149,39 +175,33 @@
         (if initial-contents-p
             (progn
               ;; NOTE SPEC: initial-contents is composed of a nested structure
-              ;; of sequences. TODO
+              ;; of sequences. [DONE]
 
               ;; NOTE SPEC: The numbers of levels in the structure must equal
-              ;; the rank of array. TODO
+              ;; the rank of array. [DONE]
 
               ;; NOTE SPEC: Each leaf of the nested structure must be of the
-              ;; type given by element-type. TODO
-
-
+              ;; type given by element-type. [DONE]
 
               ;; NOTE SPEC: If array is zero-dimensional, then
-              ;; initial-contents specifies the single element.
+              ;; initial-contents specifies the single element. [DONE]
 
               ;; NOTE SPEC: Otherwise, initial-contents must be a sequence
               ;; whose length is equal to the first dimension; each element
               ;; must be a nested structure for an array whose dimensions are
               ;; the remaining dimensions, and so on.
 
-              ;; NOTE SPEC: Initial-contents cannot be supplied if either
-              ;; initial-element is supplied or displaced-to is non-nil.
-              (when (or initial-element-p displaced-to)
-                ;; TODO Write a better condition signal.
-                (error))
+              ;; ;; NOTE SPEC: Initial-contents cannot be supplied if either
+              ;; ;; initial-element is supplied or displaced-to is non-nil.
+              ;; (when (or initial-element-p displaced-to)
+              ;;   ;; TODO Write a better condition signal.
+              ;;   (error))
 
               ;; NOTE SPEC: If initial-contents is not supplied, the
               ;; consequences of later reading an uninitialized element of
               ;; new-array are undefined unless either initial-element is
               ;; supplied or displaced-to is non-nil. TODO Question. What does
               ;; this mean?
-              )
-
-            (progn
-              ;; TODO
               ))
 
         (if adjustable
@@ -205,22 +225,22 @@
                )
               ((integerp fill-pointer)
                ;; NOTE SPEC: If fill-pointer is an integer, it becomes the initial
-               ;; fill pointer for the vector.
+               ;; fill pointer for the vector. TODO
                ))
 
         (if displaced-to
             (progn
               ;; NOTE SPEC: If displaced-to is non-nil, make-array will create a displaced
-              ;; array and displaced-to is the target of that displaced array.
+              ;; array and displaced-to is the target of that displaced array. TODO
 
               ;; NOTE SPEC: [If displaced-to is non-nil], the consequences are
               ;; undefined if the actual array element type of displaced-to is not
               ;; type equivalent to the actual array element type of the array being
-              ;; created.
+              ;; created. TODO
               )
             (progn
               ;; NOTE SPEC: If displaced-to is nil, the array is not a displaced
-              ;; array.
+              ;; array. TODO
               ))
 
         ;; TODO
@@ -248,11 +268,7 @@
         ;; taking the elements in row-major order, and then maps an access to
         ;; element k of array B to an access to element k+n of array A. TODO
 
-
-        ;; FIXME The logic that spec specifies for handling keyword arguments
-        ;; is not as simple. Write %compute-branch for making the decision.
-
-        (when initial-contents-p ; This condition should be replaced by the output of %compute-branch
+        (when initial-contents-p
           (let ((index 0))
             (labels ((init (dimensions contents)
                        "Populate NEW-ARRAY by mutation."
@@ -263,7 +279,7 @@
                               (assert (= (length contents) (first dimensions))) ; TODO Signals a better condition.
                               (map nil
                                    (lambda (element)
-                                     ;; TODO Should we optimize this lambda (e.g. inline)?
+                                     (check-type element element-type)
                                      (setf (row-major-aref new-array index) element)
                                      (incf index))
                                    contents)
@@ -272,9 +288,8 @@
                                (assert (= (length contents) (first dimensions))) ; TODO Signals a better condition.
                                (map nil
                                     (lambda (element)
-                                      ;; TODO Should we optimize this lambda (e.g. inline)?
                                       (init (rest dimensions) element))
                                     contents)))))
                      (init canonicalized-dimensions initial-contents))))
 
-        new-array))))
+          new-array))))
