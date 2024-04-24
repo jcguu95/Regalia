@@ -96,8 +96,8 @@
 
   ;;; Some preliminary checks.
 
-;; NOTE SPEC: If initial-element is supplied, it must be of the
-  ;; type given by element-type.
+  ;; NOTE SPEC: If initial-element is supplied, it must be of the type given
+  ;; by element-type.
   (check-type initial-element element-type)
 
   ;; NOTE SPEC: initial-element cannot be supplied if either the
@@ -120,7 +120,22 @@
     ;; TODO Write a better condition signal.
     (error))
 
-  ;;;
+  ;; NOTE SPEC: If initial-element is not supplied, the
+  ;; consequences of later reading an uninitialized element of
+  ;; new-array are undefined unless either initial-contents is
+  ;; supplied or displaced-to is non-nil.
+  ;;
+  ;; NOTE SPEC: If initial-contents is not supplied, the
+  ;; consequences of later reading an uninitialized element of
+  ;; new-array are undefined unless either initial-element is
+  ;; supplied or displaced-to is non-nil.
+  (when (and displaced-to
+             (not initial-element-p)
+             (not initial-contents-p))
+    ;; TODO Write a better condition signal.
+    (warn "Undefined area."))
+
+;;;
 
   ;; FIXME Do some more checks on the dimensions.
   (let* ((canonicalized-dimensions (if (listp dimensions)
@@ -138,26 +153,22 @@
               ;; NOTE SPEC: If initial-element is supplied, it is used to
               ;; initialize each element of new-array. [DONE]
 
-              ;; ;; NOTE SPEC: If initial-element is supplied, it must be of the
-              ;; ;; type given by element-type.
-              ;; (check-type initial-element element-type)
+              ;; NOTE SPEC: If initial-element is supplied, it must be of the
+              ;; type given by element-type. [DONE]
 
-              ;; ;; NOTE SPEC: initial-element cannot be supplied if either the
-              ;; ;; :initial-contents option is supplied or displaced-to is
-              ;; ;; non-nil.
-              ;; (when (or initial-contents-p displaced-to)
-              ;;   ;; TODO Write a better condition signal.
-              ;;   (error))
+              ;; NOTE SPEC: initial-element cannot be supplied if either the
+              ;; :initial-contents option is supplied or displaced-to is
+              ;; non-nil. [DONE]
 
               )
             (progn
               ;; NOTE SPEC: If initial-element is not supplied, the
               ;; consequences of later reading an uninitialized element of
               ;; new-array are undefined unless either initial-contents is
-              ;; supplied or displaced-to is non-nil. TODO Question. What does
-              ;; this mean?
-              ;;
-              ;; TODO
+              ;; supplied or displaced-to is non-nil. Question: What does this
+              ;; mean? Answer: After discussing with bike, it seems that the
+              ;; standard means instead "uninitialized slot/cell of
+              ;; new-array". [DONE]
               ))
 
         (if initial-contents-p
@@ -177,19 +188,19 @@
               ;; NOTE SPEC: Otherwise, initial-contents must be a sequence
               ;; whose length is equal to the first dimension; each element
               ;; must be a nested structure for an array whose dimensions are
-              ;; the remaining dimensions, and so on.
+              ;; the remaining dimensions, and so on. [DONE]
 
-              ;; ;; NOTE SPEC: Initial-contents cannot be supplied if either
-              ;; ;; initial-element is supplied or displaced-to is non-nil.
-              ;; (when (or initial-element-p displaced-to)
-              ;;   ;; TODO Write a better condition signal.
-              ;;   (error))
+              ;; NOTE SPEC: Initial-contents cannot be supplied if either
+              ;; initial-element is supplied or displaced-to is non-nil.
+              ;; [DONE]
 
               ;; NOTE SPEC: If initial-contents is not supplied, the
               ;; consequences of later reading an uninitialized element of
               ;; new-array are undefined unless either initial-element is
-              ;; supplied or displaced-to is non-nil. TODO Question. What does
-              ;; this mean?
+              ;; supplied or displaced-to is non-nil. -- Question: What does
+              ;; this mean? Answer: After discussing with bike, it seems that
+              ;; the standard means instead "uninitialized slot/cell of
+              ;; new-array". [DONE]
               ))
 
         (if adjustable
@@ -231,7 +242,6 @@
               ;; array. TODO
               ))
 
-        ;; TODO
         ;; NOTE DISPLACED-INDEX-OFFSET
         ;;
         ;; The displaced-index-offset is made to be the index offset of the
