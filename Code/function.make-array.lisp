@@ -96,6 +96,10 @@
 
   ;;; Some preliminary checks.
 
+;; NOTE SPEC: If initial-element is supplied, it must be of the
+  ;; type given by element-type.
+  (check-type initial-element element-type)
+
   ;; NOTE SPEC: initial-element cannot be supplied if either the
   ;; :initial-contents option is supplied or displaced-to is non-nil.
   (when (and initial-element-p (or initial-contents-p displaced-to))
@@ -107,7 +111,7 @@
     ;; TODO Write a better condition signal.
     (error))
 
-  ;; NOTE SPEC: displaced-index-oﬀset — a valid array row-major index for
+  ;; NOTE SPEC: displaced-index-offset - a valid array row-major index for
   ;; displaced-to. The default is 0. This option must not be supplied unless a
   ;; non-nil displaced-to is supplied.
   (when (and displaced-index-offset-p
@@ -128,31 +132,15 @@
                             0)))
     (multiple-value-bind (class-name additional-space default-element)
         (%compute-array-spec element-type rank element-count)
-      (let ((new-array
-              ;; FIXME Rank may be zero, in each case the resulting array is
-              ;; 0-dimensional, and can hold one object.
-              (if (= rank 1)
-                  (make-instance class-name
-                                 :dimensions canonicalized-dimensions
-                                 :additional-space additional-space
-                                 :fill-pointer (if (eq fill-pointer 't)
-                                                   element-count
-                                                   fill-pointer))
-                  (make-instance class-name
-                                 :dimensions canonicalized-dimensions
-                                 :additional-space additional-space))))
-
-
+      (let ()
         (if initial-element-p
             (progn
               ;; NOTE SPEC: If initial-element is supplied, it is used to
-              ;; initialize each element of new-array.
-              ;;
-              ;; TODO
+              ;; initialize each element of new-array. [DONE]
 
-              ;; NOTE SPEC: If initial-element is supplied, it must be of the
-              ;; type given by element-type.
-              (check-type initial-element element-type)
+              ;; ;; NOTE SPEC: If initial-element is supplied, it must be of the
+              ;; ;; type given by element-type.
+              ;; (check-type initial-element element-type)
 
               ;; ;; NOTE SPEC: initial-element cannot be supplied if either the
               ;; ;; :initial-contents option is supplied or displaced-to is
@@ -268,28 +256,47 @@
         ;; taking the elements in row-major order, and then maps an access to
         ;; element k of array B to an access to element k+n of array A. TODO
 
-        (when initial-contents-p
-          (let ((index 0))
-            (labels ((init (dimensions contents)
-                       "Populate NEW-ARRAY by mutation."
-                       (cond ((null dimensions)
-                              (setf (row-major-aref new-array 0) contents))
-                             ((null (rest dimensions))
-                              (check-type contents sequence)
-                              (assert (= (length contents) (first dimensions))) ; TODO Signals a better condition.
-                              (map nil
-                                   (lambda (element)
-                                     (check-type element element-type)
-                                     (setf (row-major-aref new-array index) element)
-                                     (incf index))
-                                   contents)
-                              (t
-                               (check-type contents sequence)
-                               (assert (= (length contents) (first dimensions))) ; TODO Signals a better condition.
-                               (map nil
-                                    (lambda (element)
-                                      (init (rest dimensions) element))
-                                    contents)))))
-                     (init canonicalized-dimensions initial-contents))))
-
-          new-array))))
+        (let ((index 0)
+              (new-array
+                ;; FIXME Rank may be zero, in each case the resulting array is
+                ;; 0-dimensional, and can hold one object.
+                (if (= rank 1)
+                    (make-instance class-name
+                                   :dimensions canonicalized-dimensions
+                                   :additional-space additional-space
+                                   :fill-pointer (if (eq fill-pointer 't)
+                                                     element-count
+                                                     fill-pointer))
+                    (make-instance class-name
+                                   :dimensions canonicalized-dimensions
+                                   :additional-space additional-space))))
+          (labels ((populate-with-element (dimensions element)
+                     "Populate NEW-ARRAY with ELEMENT by mutation."
+                     (dotimes index (array-total-size new-array)
+                       (setf (row-major-aref new-array index) element)))
+                   (populate-with-contents (dimensions contents)
+                     "Populate NEW-ARRAY with CONTENTS by mutation."
+                     (cond ((null dimensions)
+                            (setf (row-major-aref new-array 0) contents))
+                           ((null (rest dimensions))
+                            (check-type contents sequence)
+                            (assert (= (length contents) (first dimensions))) ; TODO Signals a better condition.
+                            (map nil
+                                 (lambda (element)
+                                   (check-type element element-type)
+                                   (setf (row-major-aref new-array index) element)
+                                   (incf index))
+                                 contents)
+                            (t
+                             (check-type contents sequence)
+                             (assert (= (length contents) (first dimensions))) ; TODO Signals a better condition.
+                             (map nil
+                                  (lambda (element)
+                                    (populate-with-contents (rest dimensions) element))
+                                  contents)))))
+                   (cond
+                     (initial-element-p
+                      (populate-with-element  canonicalized-dimensions initial-element))
+                     (initial-contents-p
+                      (populate-with-contents canonicalized-dimensions initial-contents))))))
+        new-array)))
