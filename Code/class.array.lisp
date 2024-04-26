@@ -13,7 +13,11 @@
 (defclass array ()
   ((%contents :initarg :contents :accessor array-contents) ; Only for the extrinsic version. See #'make-array-contents.
    (%dimensions :initarg :dimensions :reader array-dimensions)
-   (%adjustable :initarg :adjustable :reader adjustable-array-p)
+   ;; NOTE https://novaspec.org/cl/f_adjustable-array-p
+   ;; NOTE https://novaspec.org/cl/26_1_Glossary#actually_adjustable
+   (%actually-adjustable :initarg :adjustable :reader adjustable-array-p)
+   ;; NOTE https://novaspec.org/cl/26_1_Glossary#expressly_adjustable
+   (%expressly-adjustable :initarg :expressly-adjustable)
    ;; TODO Enforcement (?) and Documentation: The slot of %element-type has to
    ;; be a type-specifier https://www.lispworks.com/documentation/HyperSpec/Body/26_glo_t.htm#type_specifier
    (%element-type

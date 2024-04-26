@@ -71,10 +71,13 @@
                      (element-type 't)
                      (initial-element nil initial-element-p)
                      (initial-contents nil initial-contents-p)
-                     (adjustable)
-                     (fill-pointer)
+                     (adjustable nil)
+                     (fill-pointer nil)
                      (displaced-to nil displaced-to-p)
                      (displaced-index-offset 0 displaced-index-offset-p))
+
+  ;; TODO handle DISPLACED-TO, DISPLACED-INDEX-OFFSET
+  (declare (ignore displaced-to displaced-index-offset))
 
   ;; NOTE
   ;;
@@ -90,11 +93,17 @@
   ;; TODO Check the above.
 
 
-  ;; TODO handle ADJUSTABLE, DISPLACED-TO, DISPLACED-INDEX-OFFSET
-  (declare (ignore adjustable displaced-to displaced-index-offset))
+  ;; NOTE SPEC: If make-array is called with adjustable, fill-pointer, and
+  ;; displaced-to each nil, then the result is a simple array. If make-array
+  ;; is called with one or more of adjustable, fill-pointer, or displaced-to
+  ;; being true, whether the resulting array is a simple array is
+  ;; implementation-dependent. TODO
 
 
-  ;;; Some preliminary checks.
+  ;; Normalize ADJUSTABLE.
+  (when adjustable (setf adjustable t))
+
+;;; Some preliminary checks.
 
   ;; NOTE SPEC: If initial-element is supplied, it must be of the type given
   ;; by element-type.
@@ -203,17 +212,6 @@
               ;; new-array". [DONE]
               ))
 
-        (if adjustable
-            (progn
-              ;; NOTE SPEC: If adjustable is non-nil, the array is expressly
-              ;; adjustable (and so actually adjustable);
-              )
-            (progn
-              ;; NOTE SPEC: otherwise, the array is not expressly adjustable
-              ;; (and it is implementation-dependent whether the array is
-              ;; actually adjustable).
-              ))
-
         (cond ((not (null fill-pointer))
                ;; NOTE SPEC: If fill-pointer is non-nil, the array must be
                ;; one-dimensional; that is, the array must be a vector. TODO
@@ -276,10 +274,26 @@
                                    :additional-space additional-space
                                    :fill-pointer (if (eq fill-pointer 't)
                                                      element-count
-                                                     fill-pointer))
+                                                     fill-pointer)
+                                   ;; NOTE SPEC: If adjustable is non-nil, the
+                                   ;; array is expressly adjustable (and so
+                                   ;; actually adjustable); otherwise, the
+                                   ;; array is not expressly adjustable (and
+                                   ;; it is implementation-dependent whether
+                                   ;; the array is actually adjustable).
+                                   :adjustable adjustable
+                                   :expressly-adjustable adjustable)
                     (make-instance class-name
                                    :dimensions canonicalized-dimensions
-                                   :additional-space additional-space))))
+                                   :additional-space additional-space
+                                   ;; NOTE SPEC: If adjustable is non-nil, the
+                                   ;; array is expressly adjustable (and so
+                                   ;; actually adjustable); otherwise, the
+                                   ;; array is not expressly adjustable (and
+                                   ;; it is implementation-dependent whether
+                                   ;; the array is actually adjustable).
+                                   :adjustable adjustable
+                                   :expressly-adjustable adjustable))))
           (labels ((populate-with-element (dimensions element)
                      "Populate NEW-ARRAY with ELEMENT by mutation."
                      (dotimes index (array-total-size new-array)
