@@ -142,7 +142,7 @@
              (not initial-element-p)
              (not initial-contents-p))
     ;; TODO Write a better condition signal.
-    (warn "Undefined area."))
+    (warn "You've reached an undefined area."))
 
 ;;;
 
@@ -154,6 +154,20 @@
          (element-count (if canonicalized-dimensions
                             (apply #'* canonicalized-dimensions)
                             0)))
+
+    ;; NOTE SPEC: fill-pointer — a valid fill pointer for the array to be
+    ;; created, or t or nil. WHERE: valid fill pointer n. (of an array) a
+    ;; fixnum suitable for use as a fill pointer for the array. Such a fixnum
+    ;; must be greater than or equal to zero, and less than or equal to the
+    ;; array total size of the array.
+    (check-type fill-pointer (or boolean fixnum))
+    ;; NOTE SPEC: If fill-pointer is non-nil, the array must be one-dimensional;
+    ;; that is, the array must be a vector.
+    (when fill-pointer
+      (unless (= 1 (length canonicalized-dimensions))
+        ;; TODO Signal better conditions.
+        (error)))
+
     (multiple-value-bind (class-name additional-space default-element)
         (%compute-array-spec element-type rank element-count)
       (let ()
@@ -214,15 +228,15 @@
 
         (cond ((not (null fill-pointer))
                ;; NOTE SPEC: If fill-pointer is non-nil, the array must be
-               ;; one-dimensional; that is, the array must be a vector. TODO
+               ;; one-dimensional; that is, the array must be a vector. DONE
                )
               ((eq t fill-pointer)
                ;; NOTE SPEC: If fill-pointer is t, the length of the vector is
-               ;; used to initialize the fill pointer. TODO
+               ;; used to initialize the fill pointer. DONE
                )
               ((integerp fill-pointer)
                ;; NOTE SPEC: If fill-pointer is an integer, it becomes the initial
-               ;; fill pointer for the vector. TODO
+               ;; fill pointer for the vector. DONE
                ))
 
         (if displaced-to
