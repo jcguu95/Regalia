@@ -76,9 +76,6 @@
                      (displaced-to nil displaced-to-p)
                      (displaced-index-offset 0 displaced-index-offset-p))
 
-  ;; TODO handle DISPLACED-TO, DISPLACED-INDEX-OFFSET
-  (declare (ignore displaced-to displaced-index-offset))
-
   ;; NOTE
   ;;
   ;; SPEC: dimensions — a designator for a list of valid array dimensions.
@@ -109,6 +106,9 @@
   ;; by element-type.
   (check-type initial-element element-type)
 
+  ;; NOTE SPEC: displaced-to — an array or nil.
+  (check-type displaced-to (or array null))
+
   ;; NOTE SPEC: initial-element cannot be supplied if either the
   ;; :initial-contents option is supplied or displaced-to is non-nil.
   (when (and initial-element-p (or initial-contents-p displaced-to))
@@ -119,13 +119,14 @@
   (when (and initial-contents-p (or initial-element-p displaced-to))
     ;; TODO Write a better condition signal.
     (error))
+  ;; NOTE SPEC: This option [displaced-to] must not be supplied if either
+  ;; initial-element or initial-contents is supplied. (DONE above.)
 
   ;; NOTE SPEC: displaced-index-offset - a valid array row-major index for
   ;; displaced-to. The default is 0. This option must not be supplied unless a
   ;; non-nil displaced-to is supplied.
   (when (and displaced-index-offset-p
-             (not (and displaced-to-p
-                       displaced-to)))
+             (not (and displaced-to displaced-to-p)))
     ;; TODO Write a better condition signal.
     (error))
 
@@ -242,7 +243,7 @@
         (if displaced-to
             (progn
               ;; NOTE SPEC: If displaced-to is non-nil, make-array will create a displaced
-              ;; array and displaced-to is the target of that displaced array. TODO
+              ;; array and displaced-to is the target of that displaced array. DONE
 
               ;; NOTE SPEC: [If displaced-to is non-nil], the consequences are
               ;; undefined if the actual array element type of displaced-to is not
@@ -251,7 +252,7 @@
               )
             (progn
               ;; NOTE SPEC: If displaced-to is nil, the array is not a displaced
-              ;; array. TODO
+              ;; array. DONE
               ))
 
         ;; NOTE DISPLACED-INDEX-OFFSET
@@ -261,7 +262,7 @@
         ;;
         ;; When an array A is given as the :displaced-to argument to
         ;; make-array when creating array B, then array B is said to be
-        ;; displaced to array A. TODO
+        ;; displaced to array A. DONE
         ;;
         ;; The total number of elements in an array, called the total size of
         ;; the array, is calculated as the product of all the dimensions. TODO
@@ -289,6 +290,8 @@
                                    :fill-pointer (if (eq fill-pointer 't)
                                                      element-count
                                                      fill-pointer)
+                                   :displaced-to displaced-to
+                                   :displaced-index-offset displaced-index-offset
                                    ;; NOTE SPEC: If adjustable is non-nil, the
                                    ;; array is expressly adjustable (and so
                                    ;; actually adjustable); otherwise, the
@@ -300,6 +303,8 @@
                     (make-instance class-name
                                    :dimensions canonicalized-dimensions
                                    :additional-space additional-space
+                                   :displaced-to displaced-to
+                                   :displaced-index-offset displaced-index-offset
                                    ;; NOTE SPEC: If adjustable is non-nil, the
                                    ;; array is expressly adjustable (and so
                                    ;; actually adjustable); otherwise, the
