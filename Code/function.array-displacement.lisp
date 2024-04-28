@@ -3,7 +3,9 @@
 
 (cl:in-package #:regalia)
 
-(defgeneric array-displacement ((array array))
+(defgeneric array-displacement (array))
+
+(defmethod array-displacement ((array array))
   (let ((displaced-to (array-displaced-to array))
         (displaced-index-offset (array-displaced-index-offset array)))
     (if displaced-to
