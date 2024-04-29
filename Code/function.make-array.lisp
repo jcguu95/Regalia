@@ -75,7 +75,6 @@
                      (fill-pointer nil)
                      (displaced-to nil displaced-to-p)
                      (displaced-index-offset 0 displaced-index-offset-p))
-
   ;; NOTE
   ;;
   ;; SPEC: dimensions — a designator for a list of valid array dimensions.
@@ -89,13 +88,11 @@
   ;;
   ;; TODO Check the above.
 
-
   ;; NOTE SPEC: If make-array is called with adjustable, fill-pointer, and
   ;; displaced-to each nil, then the result is a simple array. If make-array
   ;; is called with one or more of adjustable, fill-pointer, or displaced-to
   ;; being true, whether the resulting array is a simple array is
-  ;; implementation-dependent. TODO
-
+  ;; implementation-dependent. TODO [TYPE]
 
   ;; Normalize ADJUSTABLE.
   (when adjustable (setf adjustable t))
@@ -112,12 +109,12 @@
   ;; NOTE SPEC: initial-element cannot be supplied if either the
   ;; :initial-contents option is supplied or displaced-to is non-nil.
   (when (and initial-element-p (or initial-contents-p displaced-to))
-    ;; TODO Write a better condition signal.
+    ;; TODO Write a better condition signal. [CONDITION]
     (error))
   ;; NOTE SPEC: Initial-contents cannot be supplied if either initial-element
   ;; is supplied or displaced-to is non-nil.
   (when (and initial-contents-p (or initial-element-p displaced-to))
-    ;; TODO Write a better condition signal.
+    ;; TODO Write a better condition signal. [CONDITION]
     (error))
   ;; NOTE SPEC: This option [displaced-to] must not be supplied if either
   ;; initial-element or initial-contents is supplied. (DONE above.)
@@ -125,10 +122,19 @@
   ;; NOTE SPEC: displaced-index-offset - a valid array row-major index for
   ;; displaced-to. The default is 0. This option must not be supplied unless a
   ;; non-nil displaced-to is supplied.
-  (when (and displaced-index-offset-p
-             (not (and displaced-to displaced-to-p)))
-    ;; TODO Write a better condition signal.
-    (error))
+  ;;
+  ;; NOTE SPEC: The total number of elements in an array, called the total
+  ;; size of the array, is calculated as the product of all the dimensions. It
+  ;; is required that the total size of A be no smaller than the sum of the
+  ;; total size of B plus the offset n supplied by the displaced-index-offset.
+  (if displaced-index-offset-p
+      (if (and displaced-to displaced-to-p)
+          ;; TODO Write a better condition signal. [CONDITION]
+          (assert
+           (>= (array-total-size displaced-to)
+               (+ displaced-index-offset (apply #'* dimensions))))
+          ;; TODO Write a better condition signal. [CONDITION]
+          (error)))
 
   ;; NOTE SPEC: If initial-element is not supplied, the
   ;; consequences of later reading an uninitialized element of
@@ -142,7 +148,7 @@
   (when (and displaced-to
              (not initial-element-p)
              (not initial-contents-p))
-    ;; TODO Write a better condition signal.
+    ;; TODO Write a better condition signal. [CONDITION]
     (warn "You've reached an undefined area."))
 
 ;;;
@@ -166,7 +172,7 @@
     ;; that is, the array must be a vector.
     (when fill-pointer
       (unless (= 1 (length canonicalized-dimensions))
-        ;; TODO Signal better conditions.
+        ;; TODO Signal better conditions. [CONDITION]
         (error)))
 
     (multiple-value-bind (class-name additional-space default-element)
@@ -248,7 +254,7 @@
               ;; NOTE SPEC: [If displaced-to is non-nil], the consequences are
               ;; undefined if the actual array element type of displaced-to is not
               ;; type equivalent to the actual array element type of the array being
-              ;; created. TODO
+              ;; created. TODO [TYPE]
               )
             (progn
               ;; NOTE SPEC: If displaced-to is nil, the array is not a displaced
@@ -258,26 +264,25 @@
         ;; NOTE DISPLACED-INDEX-OFFSET
         ;;
         ;; The displaced-index-offset is made to be the index offset of the
-        ;; array. TODO
+        ;; array. DONE
         ;;
         ;; When an array A is given as the :displaced-to argument to
         ;; make-array when creating array B, then array B is said to be
         ;; displaced to array A. DONE
         ;;
         ;; The total number of elements in an array, called the total size of
-        ;; the array, is calculated as the product of all the dimensions. TODO
-        ;;
-        ;; It is required that the total size of A be no smaller than the sum
-        ;; of the total size of B plus the offset n supplied by the
-        ;; displaced-index-offset. TODO
+        ;; the array, is calculated as the product of all the dimensions. It
+        ;; is required that the total size of A be no smaller than the sum of
+        ;; the total size of B plus the offset n supplied by the
+        ;; displaced-index-offset. DONE
         ;;
         ;; The effect of displacing is that array B does not have any elements
         ;; of its own, but instead maps accesses to itself into accesses to
-        ;; array A. TODO
+        ;; array A.
         ;;
         ;; The mapping treats both arrays as if they were one-dimensional by
         ;; taking the elements in row-major order, and then maps an access to
-        ;; element k of array B to an access to element k+n of array A. TODO
+        ;; element k of array B to an access to element k+n of array A.
 
         (let ((index 0)
               (new-array
@@ -323,7 +328,7 @@
                             (setf (row-major-aref new-array 0) contents))
                            ((null (rest dimensions))
                             (check-type contents sequence)
-                            (assert (= (length contents) (first dimensions))) ; TODO Signals a better condition.
+                            (assert (= (length contents) (first dimensions))) ; TODO Signals a better condition. [CONDITION]
                             (map nil
                                  (lambda (element)
                                    (check-type element element-type)
@@ -332,7 +337,7 @@
                                  contents)
                             (t
                              (check-type contents sequence)
-                             (assert (= (length contents) (first dimensions))) ; TODO Signals a better condition.
+                             (assert (= (length contents) (first dimensions))) ; TODO Signals a better condition. [CONDITION]
                              (map nil
                                   (lambda (element)
                                     (populate-with-contents (rest dimensions) element))
