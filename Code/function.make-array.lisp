@@ -12,7 +12,7 @@
 
 (defun %compute-array-spec (element-type rank element-count)
   "Returns three values - class-name, additional-space, and default-element."
-  ;; TODO Find out if we can reuse code of UPGRADED-ARRAY-ELEMENT-TYPE.
+  ;; TODO [OPTIMIZE/REFACTOR] Find out if we can reuse code of UPGRADED-ARRAY-ELEMENT-TYPE.
   (cond ((eq element-type 't)
          (values (if (= rank 1) 'simple-vector 'array-t)
                  element-count
@@ -66,6 +66,9 @@
                  element-count
                  nil))))
 
+(deftype valid-array-dimension ()
+  `(and fixnum (integer 0 array-dimension-limit)))
+
 (defun make-array (dimensions
                    &key
                      (element-type 't)
@@ -75,18 +78,6 @@
                      (fill-pointer nil)
                      (displaced-to nil displaced-to-p)
                      (displaced-index-offset 0 displaced-index-offset-p))
-  ;; NOTE
-  ;;
-  ;; SPEC: dimensions — a designator for a list of valid array dimensions.
-  ;;
-  ;; SPEC: valid array dimension n. a fixnum suitable for use as an array
-  ;; dimension. Such a fixnum must be greater than or equal to zero, and less
-  ;; than the value of array-dimension-limit. When multiple array dimensions
-  ;; are to be used together to specify a multi-dimensional array, there is
-  ;; also an implied constraint that the product of all of the dimensions be
-  ;; less than the value of array-total-size-limit.
-  ;;
-  ;; TODO Check the above.
 
   ;; NOTE SPEC: If make-array is called with adjustable, fill-pointer, and
   ;; displaced-to each nil, then the result is a simple array. If make-array
@@ -119,23 +110,6 @@
   ;; NOTE SPEC: This option [displaced-to] must not be supplied if either
   ;; initial-element or initial-contents is supplied. (DONE above.)
 
-  ;; NOTE SPEC: displaced-index-offset - a valid array row-major index for
-  ;; displaced-to. The default is 0. This option must not be supplied unless a
-  ;; non-nil displaced-to is supplied.
-  ;;
-  ;; NOTE SPEC: The total number of elements in an array, called the total
-  ;; size of the array, is calculated as the product of all the dimensions. It
-  ;; is required that the total size of A be no smaller than the sum of the
-  ;; total size of B plus the offset n supplied by the displaced-index-offset.
-  (if displaced-index-offset-p
-      (if (and displaced-to displaced-to-p)
-          ;; TODO Write a better condition signal. [CONDITION]
-          (assert
-           (>= (array-total-size displaced-to)
-               (+ displaced-index-offset (apply #'* dimensions))))
-          ;; TODO Write a better condition signal. [CONDITION]
-          (error)))
-
   ;; NOTE SPEC: If initial-element is not supplied, the
   ;; consequences of later reading an uninitialized element of
   ;; new-array are undefined unless either initial-contents is
@@ -158,9 +132,43 @@
                                        dimensions
                                        (list dimensions)))
          (rank (length canonicalized-dimensions))
+         (array-total-size (apply #'* canonicalized-dimensions))
          (element-count (if canonicalized-dimensions
                             (apply #'* canonicalized-dimensions)
                             0)))
+
+    ;; NOTE SPEC: displaced-index-offset - a valid array row-major index for
+    ;; displaced-to. The default is 0. This option must not be supplied unless a
+    ;; non-nil displaced-to is supplied.
+    ;;
+    ;; NOTE SPEC: The total number of elements in an array, called the total
+    ;; size of the array, is calculated as the product of all the dimensions. It
+    ;; is required that the total size of A be no smaller than the sum of the
+    ;; total size of B plus the offset n supplied by the displaced-index-offset.
+    (if displaced-index-offset-p
+        (if (and displaced-to displaced-to-p)
+            ;; TODO Write a better condition signal. [CONDITION]
+            (assert
+             (>= (array-total-size displaced-to)
+                 (+ displaced-index-offset array-total-size)))
+            ;; TODO Write a better condition signal. [CONDITION]
+            (error)))
+
+    ;; NOTE SPEC: dimensions — a designator for a list of valid array
+    ;; dimensions.
+    ;;
+    ;; NOTE SPEC: valid array dimension n. a fixnum suitable for use as an array
+    ;; dimension. Such a fixnum must be greater than or equal to zero, and less
+    ;; than the value of array-dimension-limit. When multiple array dimensions
+    ;; are to be used together to specify a multi-dimensional array, there is
+    ;; also an implied constraint that the product of all of the dimensions be
+    ;; less than the value of array-total-size-limit.
+    ;;
+    ;; TODO Write a better condition signal. [CONDITION]
+    (dolist (dim canonicalized-dimensions)
+      (check-type dim valid-array-dimension))
+    ;; TODO Write a better condition signal. [CONDITION]
+    (check-type array-total-size valid-array-dimension)
 
     ;; NOTE SPEC: fill-pointer — a valid fill pointer for the array to be
     ;; created, or t or nil. WHERE: valid fill pointer n. (of an array) a
