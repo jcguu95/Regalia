@@ -1,13 +1,16 @@
 ;;;; Type ARRAY
 ;;;; https://www.lispworks.com/documentation/HyperSpec/Body/t_array.htm
 
-(cl:in-package #:regalia)
+;; NOTE This file may or may not be implemented. I am not sure if this is
+;; under the scope of Regalia (either in the extrinsic or intrinsic case).
 
-;; TODO How to enforce the following?
-;;   dimension — a valid array dimension.
-;;   element-type — a type specifier.
-;;   rank — a non-negative fixnum.
+;; (cl:in-package #:regalia)
 
-(deftype array (TODO)
-  ;; TODO
-  )
+;; ;; TODO How to enforce the following?
+;; ;;   dimension — a valid array dimension.
+;; ;;   element-type — a type specifier.
+;; ;;   rank — a non-negative fixnum.
+
+;; (deftype array (TODO)
+;;   ;; TODO
+;;   )
