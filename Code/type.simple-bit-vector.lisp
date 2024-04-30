@@ -9,8 +9,7 @@
   ;;
   ;; TODO How to enforce this?
   `(and
-    ;; NOTE SPEC: The type simple-vector [..] is a subtype of type (vector t).
-    (bit-vector t)
+    bit-vector
     ;; NOTE SPEC: The type of a bit vector that is not displaced to another
     ;; array, has no fill pointer, and is not expressly adjustable is a
     ;; subtype of type simple-bit-vector.
