@@ -5,7 +5,7 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
 1. Provide entries for the extrinsic versions.
 
    + [X] Implement MAKE-ARRAY-CONTENTS (extrinsic), and add note for the intrinsic version.
-   + [ ] System Class ARRAY [NOTE: SPEC is long]
+   + [ ] System Class ARRAY [TODO: Type ARRAY]
    + [X] Type SIMPLE-ARRAY
    + [X] System Class VECTOR
    + [X] Type SIMPLE-VECTOR 
