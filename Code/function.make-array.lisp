@@ -99,16 +99,19 @@
 
   ;; NOTE SPEC: initial-element cannot be supplied if either the
   ;; :initial-contents option is supplied or displaced-to is non-nil.
-  (when (and initial-element-p (or initial-contents-p displaced-to))
-    ;; TODO Write a better condition signal. [CONDITION]
-    (error))
+  ;;
   ;; NOTE SPEC: Initial-contents cannot be supplied if either initial-element
   ;; is supplied or displaced-to is non-nil.
-  (when (and initial-contents-p (or initial-element-p displaced-to))
+  ;;
+  ;; NOTE SPEC: This option [displaced-to] must not be supplied if either
+  ;; initial-element or initial-contents is supplied.
+  ;;
+  ;; NOTE: In short, at most 1 out of 3 could happen.
+  (when (or (and initial-element-p (or initial-contents-p displaced-to))
+            (and initial-contents-p (or initial-element-p displaced-to))
+            (and displaced-to-p (or initial-element-p initial-contents-p)))
     ;; TODO Write a better condition signal. [CONDITION]
     (error))
-  ;; NOTE SPEC: This option [displaced-to] must not be supplied if either
-  ;; initial-element or initial-contents is supplied. (DONE above.)
 
   ;; NOTE SPEC: If initial-element is not supplied, the
   ;; consequences of later reading an uninitialized element of
