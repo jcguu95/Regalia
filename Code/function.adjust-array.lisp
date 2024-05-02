@@ -59,6 +59,8 @@
     ;; TODO Write a better condition signal. [CONDITION]
     (error))
 
+  (setf element-type (upgraded-array-element-type element-type))
+
   (let* ((canonicalized-dimensions
            (if (listp new-dimensions) new-dimensions (list new-dimensions)))
          (old-dimensions (array-dimensions array))

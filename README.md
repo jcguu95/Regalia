@@ -35,23 +35,24 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
    + [X] Accessor SVREF 
    + [X] Function VECTOR (TODO: Find out what constitutes an object of type VECTOR.)
    + [X] Function VECTOR-POP
-   + [ ] Function VECTOR-PUSH, VECTOR-PUSH-EXTEND
+   + [X] Function VECTOR-PUSH, VECTOR-PUSH-EXTEND
      + [X] Function VECTOR-PUSH
-     + [ ] Function VECTOR-PUSH-EXTEND [WAITING FOR: ADJUST-ARRAY]
+     + [X] Function VECTOR-PUSH-EXTEND [WAITING FOR: ADJUST-ARRAY]
    + [X] Function VECTORP
    + [X] Accessor BIT, SBIT
    + [X] Function BIT-AND, BIT-ANDC1, BIT-ANDC2, BIT-EQV, BIT-IOR, BIT-NAND, BIT-NOR, BIT-NOT, BIT-ORC1, BIT-ORC2, BIT-XOR
    + [X] Function BIT-VECTOR-P
    + [X] Function SIMPLE-BIT-VECTOR-P
 
-2. Document, Polish and Clean Up
+2. Test them using ANSI-suite mimicking
+   [Consecution](https://github.com/s-expressionists/Consecution/).
+
+1. Document, Polish and Clean Up
 
    + [ ] Condition types and condition reporters
    + [ ] Documentation strings 
    + [ ] Packages and ASDF systems for intrinsic/extrinsic use
    + [ ] Possibly some compiler macros 
-
-3. Test them using ANSI-suite mimicking [Consecution](https://github.com/s-expressionists/Consecution/).
 
 4. Implement the intrinsic version.
 

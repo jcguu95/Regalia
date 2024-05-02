@@ -7,6 +7,8 @@
 
 (cl:in-package #:regalia)
 
+(defconstant +default-initial-element+ 0)
+
 ;; NOTE Some code taken and edited from
 ;; https://github.com/robert-strandh/SICL/blob/master/Code/Array/make-array-defun.lisp
 
@@ -354,8 +356,11 @@
                                     (populate-with-contents (rest dimensions) element))
                                   contents)))))
                    (cond
+                     (initial-contents-p
+                      (populate-with-contents canonicalized-dimensions initial-contents))
                      (initial-element-p
                       (populate-with-element  canonicalized-dimensions initial-element))
-                     (initial-contents-p
-                      (populate-with-contents canonicalized-dimensions initial-contents))))))
+                     (t
+                      (populate-with-element  canonicalized-dimensions +default-initial-element+))
+                     ))))
         new-array)))
