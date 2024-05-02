@@ -47,7 +47,7 @@ Regalia is an implementation of the Common Lisp **array** class hierarchy.
 2. Test them using ANSI-suite mimicking
    [Consecution](https://github.com/s-expressionists/Consecution/).
 
-1. Document, Polish and Clean Up
+3. Document, Polish and Clean Up
 
    + [ ] Condition types and condition reporters
    + [ ] Documentation strings 
