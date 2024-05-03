@@ -3,5 +3,5 @@
 (defpackage #:regalia
   (:use #:common-lisp)
   ;; #+sicl (:local-nicknames (#:closer-mop #:sicl-clos))
-  (:shadow)
+  (:shadow #:array-dimensions)
   (:export #:array-dimensions))

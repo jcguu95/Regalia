@@ -1,6 +1,6 @@
 (cl:in-package #:asdf-user)
 
-(defsystem "regalia-extrinsic"
+(asdf:defsystem "regalia-extrinsic"
   :description "Extrinsic interface to Regalia."
   :license "BSD"
   :author ("Robert Strandh"
@@ -28,7 +28,7 @@
   :depends-on ("regalia-extrinsic")
   :perform (asdf:test-op (op c)
              (symbol-call :regalia-extrinsic/test :test))
-  :components ((:module code
+  :components ((:module "code"
                 :pathname "code/extrinsic/test/"
                 :serial t
                 :components ((:file "packages")
