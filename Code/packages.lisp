@@ -2,4 +2,6 @@
 
 (defpackage #:regalia
   (:use #:common-lisp)
-  (:export))
+  ;; #+sicl (:local-nicknames (#:closer-mop #:sicl-clos))
+  (:shadow)
+  (:export #:array-dimensions))
