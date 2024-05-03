@@ -1,0 +1,3 @@
+[submodule "ansi-test-harness"]
+	path = ansi-test-harness
+	url = https://github.com/yitzchak/ansi-test-harness
