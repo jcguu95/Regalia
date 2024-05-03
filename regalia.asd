@@ -1,11 +1,6 @@
 (cl:in-package #:asdf-user)
 
 (defsystem "regalia"
-  :serial t
-  :components
-  ((:file "packages")))
-
-(defsystem "regalia"
   :description "Portable ARRAY implementation for Common Lisp."
   :license "BSD"
   :author ("Robert Strandh"
@@ -18,9 +13,7 @@
   :components ((:module "Code"
                 :serial t
                 :components ((:file "packages")
-                             (:file "TODO")
-                             (:file "conditions")
-                             (:file "interface")))))
+                             (:file "function.array-dimensions")))))
 
 (defsystem "regalia-extrinsic"
   :description "Extrinsic interface to Regalia."
@@ -33,11 +26,10 @@
   :bug-tracker "https://github.com/jcguu95/Regalia/issues"
   :depends-on ("regalia")
   ;; :in-order-to ((asdf:test-op (asdf:test-op #:regalia-extrinsic/test)))
-  :components ((:module code
-                :pathname "code/extrinsic/"
+  :components ((:module "Code"
+                :pathname "Code/extrinsic/"
                 :serial t
-                :components ((:file "packages")
-                             (:file "interface")))))
+                :components ((:file "packages")))))
 
 (asdf:defsystem "regalia-extrinsic/test"
   :description "Extrinsic testing interface to Regalia."
@@ -52,8 +44,9 @@
   :perform (asdf:test-op (op c)
              (symbol-call :regalia-extrinsic/test :test))
   :components ((:module code
-                :pathname "code/extrinsic/test/"
+                :pathname "Code/extrinsic/test/"
                 :serial t
                 :components ((:file "packages")
                              (:file "ansi-test")
-                             (:static-file "expected-failures.sexp")))))
+                             ;; (:static-file "expected-failures.sexp")
+                             ))))
