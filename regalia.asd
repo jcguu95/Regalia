@@ -10,7 +10,7 @@
   :homepage "https://github.com/jcguu95/Regalia"
   :bug-tracker "https://github.com/jcguu95/Regalia/issues"
   :depends-on ()
-  :components ((:module "Code"
+  :components ((:module "code"
                 :serial t
                 :components ((:file "packages")
                              (:file "function.array-dimensions")))))
@@ -26,8 +26,8 @@
   :bug-tracker "https://github.com/jcguu95/Regalia/issues"
   :depends-on ("regalia")
   ;; :in-order-to ((asdf:test-op (asdf:test-op #:regalia-extrinsic/test)))
-  :components ((:module "Code"
-                :pathname "Code/extrinsic/"
+  :components ((:module "code"
+                :pathname "code/extrinsic/"
                 :serial t
                 :components ((:file "packages")))))
 
@@ -44,7 +44,7 @@
   :perform (asdf:test-op (op c)
              (symbol-call :regalia-extrinsic/test :test))
   :components ((:module code
-                :pathname "Code/extrinsic/test/"
+                :pathname "code/extrinsic/test/"
                 :serial t
                 :components ((:file "packages")
                              (:file "ansi-test")
