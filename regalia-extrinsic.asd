@@ -25,7 +25,8 @@
   :version (:read-file-form "version.sexp")
   :homepage "https://github.com/jcguu95/Regalia"
   :bug-tracker "https://github.com/jcguu95/Regalia/issues"
-  :depends-on ("regalia-extrinsic")
+  :depends-on ("regalia-extrinsic"
+               "ansi-test-harness")
   :perform (asdf:test-op (op c)
              (symbol-call :regalia-extrinsic/test :test))
   :components ((:module "code"

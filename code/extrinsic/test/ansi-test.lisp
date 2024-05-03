@@ -10,4 +10,4 @@
                          (asdf:find-component system '("code" "expected-failures.sexp")))
      :extrinsic-symbols '(regalia-extrinsic:array-dimensions)
      :tests '("ARRAY-DIMENSIONS")
-     :exit t)))
+     :exit nil)))
