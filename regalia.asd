@@ -48,5 +48,4 @@
                 :serial t
                 :components ((:file "packages")
                              (:file "ansi-test")
-                             ;; (:static-file "expected-failures.sexp")
-                             ))))
+                             (:static-file "expected-failures.sexp")))))
