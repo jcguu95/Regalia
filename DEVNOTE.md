@@ -44,6 +44,26 @@
 
 2. [ ] Test them using ANSI-suite mimicking
        [Consecution](https://github.com/s-expressionists/Consecution/).
+       
+       I may need to hack the readtable, e.g. for `#(1 2 3)`. 
+       ``` lisp
+       (in-package #:regalia/ansi-text)
+
+       (defun test ()
+         (with-standard-io-syntax
+           (let ((system (asdf:find-system :regalia/ansi-test))
+                 (*readtable* (copy-readtable)))
+             (set-dispatch-macro-character #\# #\(
+   	           (lambda(s c n)
+                 ...))
+             (ansi-test-harness:ansi-test
+              :exit t
+              :directory (merge-pathnames (make-pathname
+                                           :directory '(:relative "dependencies" "ansi-test"))
+                                          (asdf:component-pathname system))
+              :extrinsic-symbols *list-of-symbol-names-to-override*
+              :tests *list-of-test-names*))))
+       ```
 
 3. [ ] Document, Polish and Clean Up
 
