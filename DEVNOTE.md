@@ -42,10 +42,7 @@
    + [X] Function BIT-VECTOR-P
    + [X] Function SIMPLE-BIT-VECTOR-P
 
-2. [ ] Test them using ANSI-suite mimicking
-       [Consecution](https://github.com/s-expressionists/Consecution/).
-       
-       I may need to hack the readtable, e.g. for `#(1 2 3)`. 
+2. [ ] Enable testing with ANSI-suite mimicking [Consecution](https://github.com/s-expressionists/Consecution/).
        ``` lisp
        (in-package #:regalia/ansi-text)
 
@@ -64,6 +61,7 @@
               :extrinsic-symbols *list-of-symbol-names-to-override*
               :tests *list-of-test-names*))))
        ```
+   + [ ] Hack the readtable e.g. for `#(1 2 3)` to be parsed as a Regalia vector.
 
 3. [ ] Document, Polish and Clean Up
 
