@@ -1,7 +1,5 @@
 * TODOs
-
 ** Provide entries for the extrinsic versions.
-
 + [X] Implement MAKE-ARRAY-CONTENTS (extrinsic), and add note for the intrinsic version.
 + [X] System Class ARRAY
 + [X] Type SIMPLE-ARRAY
@@ -44,26 +42,7 @@
 
 ** NEXT Enable testing with ANSI-suite
 
-Perhaps mimick [[https://github.com/s-expressionists/Consecution/][Consecution]].
-
-#+begin_src lisp
-(in-package #:regalia/ansi-text)
-
-(defun test ()
-  (with-standard-io-syntax
-    (let ((system (asdf:find-system :regalia/ansi-test))
-          (*readtable* (copy-readtable)))
-      (set-dispatch-macro-character #\# #\(
-           (lambda(s c n)
-          ...))
-      (ansi-test-harness:ansi-test
-       :exit t
-       :directory (merge-pathnames (make-pathname
-                                    :directory '(:relative "dependencies" "ansi-test"))
-                                   (asdf:component-pathname system))
-       :extrinsic-symbols *list-of-symbol-names-to-override*
-       :tests *list-of-test-names*))))
-#+end_src
+See how =Khazern= was tested by =ansi-test-harness=.
 
 + [ ] Hack the readtable e.g. for =#(1 2 3)= to be parsed as a Regalia vector.
 
